@@ -7,7 +7,7 @@ Rails or Sinatra, although it can be used outside of those frameworks as well.
 
 Add this line to your application's Gemfile:
 
-    gem 'google-webfonts'
+    gem 'google-webfonts', git: 'https://github.com/tonissimo/Google-Webfonts-Helper.git'
 
 And then execute:
 
@@ -41,6 +41,10 @@ including one size. For example:
     
     google_webfonts_link_tag :droid_sans => [400, 700]
     # => generates a tag for Droid+Sans with 400 and 700 weights
+    
+    google_webfonts_link_tag :roboto => %w(400 700 400italic 700italic), 
+                             :subset => [:latin, :cyrillic]
+    # => generates a tag for Roboto with 400 and 700 weights, normal and italic styles, and latin and cyrillic subset
 
 You can also use a String instead of a Symbol if you'd prefer. For example:
 
