@@ -46,10 +46,10 @@ module Google
         subset = nil
         
         options.each do |option|
-          case option.class.to_s
+          case option.class.name
           when "Symbol", "String"
-            # titleize the font name
-            font_name = option.to_s.titleize
+            # titleize the font name only if option is a Symbol
+            font_name = (option.is_a? Symbol) ? option.to_s.titleize : option
             
             # replace any spaces with pluses
             font_name = font_name.gsub(" ", "+")
@@ -60,7 +60,7 @@ module Google
             subset ||= if option.has_key? :subset
               "&subset=" << [option.delete(:subset)].flatten.join(',')
             else '' end
-            fonts += option.inject([]) do |result, (font_name, sizes)|
+            fonts += option.inject([]) do |result, (font, sizes)|
               # ensure sizes is an Array
               sizes = Array(sizes)
               
@@ -70,19 +70,11 @@ module Google
                 end
               end
               
-              # convert font name into a String
-              font_name = font_name.to_s
+              font_name = case font.class.name
+                when 'Symbol' then font.to_s.gsub(/_/, ' ').titleize.gsub(" ", "+")
+                when 'String' then font.gsub(/_/,'+')
+              end
               
-              # replace underscores with spaces
-              # and titleize the font name
-              font_name = font_name.gsub("_", " ")
-              font_name = font_name.titleize
-              
-              # convert the spaces into pluses 
-              font_name = font_name.gsub(" ", "+")
-              
-              # return font_name:sizes where
-              # sizes is a comma separated list
               result << "#{font_name}:#{sizes.join(",")}"
             end
           else
